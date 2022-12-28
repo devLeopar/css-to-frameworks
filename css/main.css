@@ -1,0 +1,14 @@
+/*For the first installation will be deleted if not necessary*/
+* {
+  box-sizing: border-box; 
+}
+
+/* Reset width and left positioning to align search dropdown */
+div[style*="left: -12px"] {
+  left: unset !important;
+}
+div[style="left: -8px; width: 306px;"] {
+  left: unset !important;
+  width: 374px !important;
+}
+/*For the first installation will be deleted if not necessary*/

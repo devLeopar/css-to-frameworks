@@ -2,6 +2,7 @@
   "name": "css-to-frameworks-content-scripts",
   "source": "src/index.ts",
   "main": "dist/index.js",
+  "license": "MIT",
   "scripts": {
     "build": "parcel build",
     "watch": "parcel watch"

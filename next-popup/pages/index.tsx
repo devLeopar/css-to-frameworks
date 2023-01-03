@@ -1,86 +1,153 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import type { NextPage } from "next";
+import cssToTailwind from "css-to-tailwind/browser";
+import { promises as fs } from "fs";
+import tailwindCss from "@utils/tailwindcss";
+import path from "path";
+import { useEffect, useState } from "react";
 
-const Home: NextPage = () => {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
-    </div>
-  )
+interface HomeProps {
+  defaultSettings: DefaultSettings;
 }
 
-export default Home
+interface DefaultSettings {
+  tailwindConfig: string;
+  postCssInput: string;
+  tailwindCss: string;
+}
+
+const Home: NextPage<HomeProps> = ({ defaultSettings }) => {
+  const pureCss = `
+  .alert {
+    position: relative;
+    padding: 1.6rem 4.6rem;
+    margin-bottom: 1.6rem;
+    border: 1px solid #c53030;
+    color: #fff;
+    border-radius: 0.2rem;
+    width: 100%;
+  }
+  
+  .logo {
+    margin-bottom: 1.6rem;
+    background: url('logo.svg') no-repeat;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .button {
+    background: #81e6d9;
+    padding: 1.6rem 4.6rem;
+    letter-spacing: 0.03rem;
+    border-radius: 0.2rem;
+  }
+  
+  .button:hover {
+    background: #2c7a7b;
+  }
+  
+  @media (min-width: 640px) {
+    .button {
+      padding: 0.5rem 1rem;
+      width: 100%;
+    } 
+  }
+  
+  @media (min-width: 1280px) {
+    .button {
+      padding: 3rem 7rem;
+      margin-bottom: 2.4rem;
+    } 
+  }
+  
+  .username {
+    color: #718096;
+    border-color: #bee3f8;
+  }
+  
+  .username:focus {
+    border-color: #3182ce;
+  }
+  
+  .username::placeholder {
+    color: #cbd5e0;
+  }
+  
+  @media (min-width: 1280px) {
+    .username {
+      width: 50%;
+    } 
+  }
+  
+  .footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row-reverse;
+    padding: 2.4rem 3rem;
+    border-top: 1px solid #fff5f5;
+  }
+  
+  }
+  `;
+
+  // const tailwindSettings = `
+  // @tailwind base;
+  // @tailwind components;
+  // @tailwind utilities;
+  // `;
+
+  const [convData, setConvData] = useState("");
+
+  // useEffect(() => {
+  //   async function convert() {
+  //     // console.log(pureCss);
+  //     // console.log(defaultSettings.tailwindCss)
+  //     const converted = await cssToTailwind(
+  //       pureCss,
+  //       defaultSettings.tailwindCss
+  //     );
+  //     setConvData(converted.tailwind);
+  //   }
+
+  //   convert();
+  // }, [defaultSettings]);
+
+  const clickHandler = async () => {
+    const converted = await cssToTailwind(pureCss, defaultSettings.tailwindCss);
+    setConvData(converted[3].tailwind);
+  };
+
+  return (
+    <>
+      <button className="btn btn-blue" onClick={clickHandler}>
+        Click to convert tailwind
+      </button>
+      <div>Here is the tailwind classes: {convData}</div>;
+    </>
+  );
+};
+
+export default Home;
+
+export async function getStaticProps() {
+  const tailwindConfig = await fs.readFile(
+    path.resolve("./node_modules/tailwindcss/stubs/simpleConfig.stub.js"),
+    "utf-8"
+  );
+  const postCssInput = await fs.readFile(
+    path.resolve("./node_modules/tailwindcss/tailwind.css"),
+    "utf-8"
+  );
+  const config = eval(`const module = {}; ${tailwindConfig}; module.exports;`);
+  const css = await tailwindCss(config, postCssInput);
+  return {
+    props: {
+      defaultSettings: {
+        tailwindConfig,
+        postCssInput,
+        tailwindCss: css,
+      },
+    },
+  };
+}

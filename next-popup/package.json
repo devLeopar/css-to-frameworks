@@ -10,9 +10,9 @@
   "dependencies": {
     "autoprefixer9": "npm:autoprefixer@9.x.x",
     "css-to-tailwind": "^1.0.3",
-    "next": "latest",
-    "postcss": "^8.3.5",
-    "postcss-js": "^3.0.3",
+    "next": "13.1.6",
+    "postcss": "^8.4.21",
+    "postcss-js": "^4.0.1",
     "postcss7": "npm:postcss@7.x.x",
     "react": "^18.0.2",
     "react-dom": "^18.0.2",
@@ -22,11 +22,11 @@
     "css-to-tailwind/tailwindcss": "1.7.3"
   },
   "devDependencies": {
-    "@types/node": "18.11.3",
-    "@types/react": "^18.0.26",
-    "@types/react-dom": "18.0.6",
+    "@types/node": "18.13.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "18.0.10",
     "autoprefixer": "^10.4.12",
-    "tailwindcss": "^2.2.4",
-    "typescript": "4.9.4"
+    "tailwindcss": "^3.2.6",
+    "typescript": "4.9.5"
   }
 }

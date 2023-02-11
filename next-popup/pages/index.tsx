@@ -1,9 +1,6 @@
 import type { NextPage } from "next";
-import cssToTailwind from "css-to-tailwind/browser";
-import { promises as fs } from "fs";
-import tailwindCss from "@utils/tailwindcss";
-import path from "path";
 import { useEffect, useState } from "react";
+import { TailwindConverter } from "css-to-tailwindcss";
 
 interface HomeProps {
   defaultSettings: DefaultSettings;
@@ -91,11 +88,34 @@ const Home: NextPage<HomeProps> = ({ defaultSettings }) => {
   }
   `;
 
-  // const tailwindSettings = `
-  // @tailwind base;
-  // @tailwind components;
-  // @tailwind utilities;
-  // `;
+  const converter = new TailwindConverter({
+    remInPx: 16, // set null if you don't want to convert rem to pixels
+    postCSSPlugins: [require("postcss-nested")], // add any postcss plugins to this array
+    tailwindConfig: {
+      // your tailwind config here
+      content: [],
+      theme: {
+        extend: {
+          colors: {
+            "custom-color": {
+              100: "#123456",
+              200: "hsla(210, 100%, 51.0%, 0.016)",
+              300: "#654321",
+              gold: "hsl(41, 28.3%, 79.8%)",
+              marine: "rgb(4, 55, 242, 0.75)",
+            },
+          },
+          screens: {
+            "custom-screen": { min: "768px", max: "1024px" },
+          },
+        },
+        supports: {
+          grid: "display: grid",
+          flex: "display: flex",
+        },
+      },
+    },
+  });
 
   const [convData, setConvData] = useState("");
 
@@ -114,8 +134,8 @@ const Home: NextPage<HomeProps> = ({ defaultSettings }) => {
   // }, [defaultSettings]);
 
   const clickHandler = async () => {
-    const converted = await cssToTailwind(pureCss, defaultSettings.tailwindCss);
-    setConvData(converted[3].tailwind);
+    const { convertedRoot, nodes } = await converter.convertCSS(pureCss);
+    setConvData(convertedRoot.toString());
   };
 
   return (
@@ -130,24 +150,24 @@ const Home: NextPage<HomeProps> = ({ defaultSettings }) => {
 
 export default Home;
 
-export async function getStaticProps() {
-  const tailwindConfig = await fs.readFile(
-    path.resolve("./node_modules/tailwindcss/stubs/simpleConfig.stub.js"),
-    "utf-8"
-  );
-  const postCssInput = await fs.readFile(
-    path.resolve("./node_modules/tailwindcss/tailwind.css"),
-    "utf-8"
-  );
-  const config = eval(`const module = {}; ${tailwindConfig}; module.exports;`);
-  const css = await tailwindCss(config, postCssInput);
-  return {
-    props: {
-      defaultSettings: {
-        tailwindConfig,
-        postCssInput,
-        tailwindCss: css,
-      },
-    },
-  };
-}
+// export async function getStaticProps() {
+//   const tailwindConfig = await fs.readFile(
+//     path.resolve("./node_modules/tailwindcss/stubs/simpleConfig.stub.js"),
+//     "utf-8"
+//   );
+//   const postCssInput = await fs.readFile(
+//     path.resolve("./node_modules/tailwindcss/tailwind.css"),
+//     "utf-8"
+//   );
+//   const config = eval(`const module = {}; ${tailwindConfig}; module.exports;`);
+//   const css = await tailwindCss(config, postCssInput);
+//   return {
+//     props: {
+//       defaultSettings: {
+//         tailwindConfig,
+//         postCssInput,
+//         tailwindCss: css,
+//       },
+//     },
+//   };
+// }

@@ -8,24 +8,17 @@
     "start": "next start"
   },
   "dependencies": {
-    "autoprefixer9": "npm:autoprefixer@9.x.x",
-    "css-to-tailwind": "^1.0.3",
+    "css-to-tailwindcss": "^1.0.4",
     "next": "13.1.6",
-    "postcss": "^8.4.21",
-    "postcss-js": "^4.0.1",
-    "postcss7": "npm:postcss@7.x.x",
     "react": "^18.0.2",
-    "react-dom": "^18.0.2",
-    "tailwindcss1": "npm:tailwindcss@1.9.6"
-  },
-  "resolutions": {
-    "css-to-tailwind/tailwindcss": "1.7.3"
+    "react-dom": "^18.0.2"
   },
   "devDependencies": {
     "@types/node": "18.13.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "18.0.10",
     "autoprefixer": "^10.4.12",
+    "postcss": "^8.4.21",
     "tailwindcss": "^3.2.6",
     "typescript": "4.9.5"
   }

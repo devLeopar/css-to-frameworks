@@ -6,11 +6,11 @@
     "bundle": "node ./bundle-extension.js"
   },
   "dependencies": {
-    "fs-extra": "^11.1.0",
+    "fs-extra": "^11.1.1",
     "node-cmd": "^5.0.0"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.212",
+    "@types/chrome": "^0.0.235",
     "@types/fs-extra": "^11.0.1"
   }
 }

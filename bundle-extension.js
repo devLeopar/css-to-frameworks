@@ -18,7 +18,9 @@ let manifest = {
     48: "images/CssToFrameworkIcon48.png",
     128: "images/CssToFrameworkIcon128.png",
   },
-  permissions: ["storage"],
+  permissions: ["storage",
+    "activeTab",
+    "tabs"],
   options_ui: {
     page: "index.html",
     open_in_tab: true,

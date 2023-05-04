@@ -1,17 +1,18 @@
-// Regex-pattern to check URLs against. 
-// It matches URLs like: http[s]://[...]stackoverflow.com[...]
-// var urlRegex = /^https?:\/\/(?:[^./?#]+\.)?stackoverflow\.com/;
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "selectElement") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs.length > 0 && tabs[0].id !== undefined) {
+                chrome.tabs.sendMessage(tabs[0].id, { action: "selectElement" });
+            }
+        });
+    }
+});
 
-// A function to use as callback
-function doStuffWithDom(domContent) {
-    console.log('I received the following DOM content:\n' + domContent);
-}
-
-// When the browser-action button is clicked...
-chrome.action.onClicked.addListener(function (tab) {
-    // ...check the URL of the active tab against our pattern and...
-    // if (urlRegex.test(tab.url)) {
-        // ...if it matches, send a message specifying a callback too
-        chrome.tabs.sendMessage(tab.id, {text: 'report_back'}, doStuffWithDom);
-    // }
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "selectedElement") {
+        chrome.runtime.sendMessage({
+            action: "updateSelectedElement",
+            payload: message.payload,
+        });
+    }
 });
